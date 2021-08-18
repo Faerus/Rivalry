@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <title>Rivalry</title>
+
+    <!-- Bootstrap
+    <link href="css/bootstrap.min.css" rel="stylesheet" /> -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous" />
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+
+    <!-- NavBar -->
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark bg-gradient">
+      <div class="container">
+        <a class="navbar-brand" href="#">Rivalry</a>
+
+        <div class="collapse navbar-collapse d-flex"  id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-md-0">
+            <li class="nav-item">
+              <a class="nav-link" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Betting</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Staking</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Farming</a>
+            </li>
+          </ul>
+          <div class="d-flex">
+            <a id="account-link" class="btn btn-primary btn-sm bg-gradient" href="#">
+              <span>Connect Wallet</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container" style="margin-top: 20px">
+      <h1>Betting</h1>
+
+      <div id="invalid-network" class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none">
+        You are not connected to correct network.<br />
+        <a id="switch-network" href="#" class="alert-link">Click to switch network</a>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+
+      <div id="not-approved" class="alert alert-warning fade show" role="alert" style="display: none;">
+        To bet or create a pool, you first need to approve $MCA spending.
+        <button type="button" class="btn btn-warning bg-gradient" id="btn-approve" style="margin-left: 20px">Approve</button>
+      </div>
+
+      <!-- ToolsBar -->
+      <div class="alert bg-dark text-light bg-gradient">
+        <div style="display: inline-block; margin-right: 20px">
+          <input type="text" class="form-control" placeholder="Filter..." />
+        </div>
+
+        <div style="display: inline-block; margin-right: 20px" class="form-check form-switch" >
+          <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" />
+          <label class="form-check-label" for="flexSwitchCheckDefault">I'm in</label>
+        </div>
+
+        <label class="form-check-label" for="select-sort">Sort by</label>
+        <div style="display: inline-block; margin-right: 20px">
+          <select id="select-sort" class="form-select" aria-label="Default select example">
+            <option selected>Popularity</option>
+            <option value="1">Popularity DESC</option>
+            <option value="2">Name</option>
+            <option value="3">Name DESC</option>
+          </select>
+        </div>
+
+        <button id="btn-create-pool-modal" type="button" class="btn btn-primary bg-gradient" data-bs-toggle="modal" data-bs-target="#modal-create-pool">+ Create pool</button>
+      </div>
+
+      <!-- Pool creation -->
+      <div class="modal fade" id="modal-create-pool" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog ">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="staticBackdropLabel">Create new pool</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+              <div id="create-pool-error" class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none">
+                <span id="create-pool-error-message"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            
+              <div class="row g-3">
+                <div class="col-12">
+                  <label for="input-token" class="form-label">Token contract</label>
+                  <input type="text" class="form-control" id="input-token" placeholder="0x84eF3FF6f112906986a0dE3D5668D33B942CC941" value="0x155040625D7ae3e9caDA9a73E3E44f76D3Ed1409">
+                </div>
+
+                <div class="col-12">
+                  <label for="input-name" class="form-label">Pool name</label>
+                  <input type="text" class="form-control" id="input-name" placeholder="MCA" value="Revomon">
+                </div>
+
+                <div class="col-md-6">
+                  <label for="input-positive" class="form-label">Positive bet</label>
+                  <div class="input-group mb-2">
+                    <input type="number" class="form-control" id="input-positive" placeholder="0.0000" value="1000.0000" min="0" step="1">
+                    <span class="input-group-text">$MCA</span>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <label for="input-negative" class="form-label">Negative bet</label>
+                  <div class="input-group mb-2">
+                    <input type="number" class="form-control" id="input-negative" placeholder="0.0000" value="0.0000" min="0" step="1">
+                    <span class="input-group-text">$MCA</span>
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  You need to bet a minimum of 1000 $MCA to create a new pool.
+                </div>
+              </div>
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btn-create-pool-cancel">Cancel</button>
+              <button type="button" class="btn btn-primary" id="btn-create-pool">Create</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      
+      <span id="no-pool">There is no pool for now, let's create one !</span>
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4 pools-container">
+
+        <div class="col pool-template" style="display: none">
+          <div class="card">
+            <div class="card-header">
+              <span class="poolName"></span>
+            </div>
+            <div class="card-body">
+              <h5 class="card-title"></h5>
+              <p class="card-text">
+                Contract: <span class="poolId"></span><br />
+                Total positive: <span class="totalPositive"></span> $MCA<br />
+                Total negative: <span class="totalNegative"></span> $MCA<br />
+              </p>
+
+              <div class="progress"  style="height: 20px;">
+                <div class="progress-bar bg-danger bg-gradient progress-negative" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+                <div class="progress-bar bg-success bg-gradient progress-positive" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">75%</div>
+              </div>   
+            </div>
+
+            <div class="card-footer">
+              <a href="#" class="btn btn-primary border-danger bg-danger bg-gradient btn-join-positive">Join -</a>
+              <a href="#" class="btn btn-primary bg-gradient">Get out</a>
+              <a href="#" class="btn btn-primary border-success bg-success bg-gradient btn-join-negative">Join +</a>
+            </div>
+          </div>
+          
+        </div>
+
+      </div>
+    </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed
+    <script src="js/bootstrap.min.js"></script> -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+      crossorigin="anonymous"
+    ></script>
+    <script src="js/web3.min.js"></script>
+    <script src="js/truffle-contract.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>
